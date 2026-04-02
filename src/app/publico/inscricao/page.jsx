@@ -6,6 +6,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from "react";
 
 export default function InscricaoPage() {
   const router = useRouter()
@@ -173,165 +174,167 @@ export default function InscricaoPage() {
   }
 
   return (
-    <div className="flex w-full h-full justify-center items-center bg-gray-50">
-      <div className="flex flex-col items-center p-4 mt-4 w-full max-w-xl mx-auto bg-white shadow-md border-gray-200 rouded-xl" >
+    <Suspense>
+      <div className="flex w-full h-full justify-center items-center bg-gray-50">
+        <div className="flex flex-col items-center p-4 mt-4 w-full max-w-xl mx-auto bg-white shadow-md border-gray-200 rouded-xl" >
 
-        <h1 className="text-2xl font-bold text-center mb-6">
-          Inscrição em Curso
-        </h1>
+          <h1 className="text-2xl font-bold text-center mb-6">
+            Inscrição em Curso
+          </h1>
 
-        <form onSubmit={handleSubmit} className="w-full space-y-5">
-          {/* Matrícula */}
-          <div className="">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Matrícula
-            </label>
-            <input
-              type="text"
-              name="matricula"
-              value={form.matricula || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="w-full space-y-5">
+            {/* Matrícula */}
+            <div className="">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Matrícula
+              </label>
+              <input
+                type="text"
+                name="matricula"
+                value={form.matricula || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              />
+            </div>
 
-          {/* Nome */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nome Completo
-            </label>
-            <input
-              type="text"
-              name="nome"
-              value={form.nome || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            />
-          </div>
+            {/* Nome */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nome Completo
+              </label>
+              <input
+                type="text"
+                name="nome"
+                value={form.nome || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              />
+            </div>
 
-          {/* Nome de Guerra */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nome de Guerra
-            </label>
-            <input
-              type="text"
-              name="nome_guerra"
-              value={form.nome_guerra || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            />
-          </div>
+            {/* Nome de Guerra */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nome de Guerra
+              </label>
+              <input
+                type="text"
+                name="nome_guerra"
+                value={form.nome_guerra || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              />
+            </div>
 
-          {/** Posto/Graduação */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Posto/Graduação
-            </label>
-            <select
-              name="post_grad"
-              value={form.post_grad || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+            {/** Posto/Graduação */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Posto/Graduação
+              </label>
+              <select
+                name="post_grad"
+                value={form.post_grad || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              >
+                <option value="">Selecione</option>
+                {post_grad.map((pg) => (
+                  <option key={pg.numero} value={pg.numero}>{pg.abreviacao}</option>
+                ))}
+              </select>
+            </div>
+
+            {/*QBMG*/}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                QBMG
+              </label>
+              <select
+                name="qbmg"
+                value={form.qbmg ?? ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              >
+                <option value="">Selecione</option>
+                <option key={1} value={1}>QBMG-1</option>
+                <option key={2} value={2}>QBMG-2</option>
+                <option key={3} value={3}>QBMG-3</option>
+                <option key={4} value={4}>QBMG-4</option>
+                <option key={5} value={5}>OFICIAL</option>
+              </select>
+            </div>
+
+            {/*Telefone*/}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Whatsapp
+              </label>
+              <input
+                type="text"
+                name="whatsapp"
+                value={form.whatsapp || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              />
+            </div>
+
+            {/* Select GBM */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Lotação
+              </label>
+              <select
+                name="lotacao"
+                value={form.lotacao || ""}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              >
+                <option value="">Selecione</option>
+                {unidadesCBMDF.map((unidade) => (
+                  <option key={unidade.id} value={unidade.id}>{unidade.sigla}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Select Curso */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Curso
+              </label>
+              <select
+                name="id_turma"
+                value={form.id_turma || ""}
+                onChange={handleChangeTurma}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              >
+                <option value="">Selecione</option>
+                {turmas.map((t) => (
+                  <option key={t.id_turma} value={t.id_turma}>
+                    {t.titulo} - {moment(t.dt_inicio).format("DD/MM/YYYY")}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Botão */}
+            <button
+              type="submit"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium transition cursor-pointer"
             >
-              <option value="">Selecione</option>
-              {post_grad.map((pg) => (
-                <option key={pg.numero} value={pg.numero}>{pg.abreviacao}</option>
-              ))}
-            </select>
-          </div>
+              Enviar Inscrição
+            </button>
 
-          {/*QBMG*/}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              QBMG
-            </label>
-            <select
-              name="qbmg"
-              value={form.qbmg ?? ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            >
-              <option value="">Selecione</option>
-              <option key={1} value={1}>QBMG-1</option>
-              <option key={2} value={2}>QBMG-2</option>
-              <option key={3} value={3}>QBMG-3</option>
-              <option key={4} value={4}>QBMG-4</option>
-              <option key={5} value={5}>OFICIAL</option>
-            </select>
-          </div>
-
-          {/*Telefone*/}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Whatsapp
-            </label>
-            <input
-              type="text"
-              name="whatsapp"
-              value={form.whatsapp || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            />
-          </div>
-
-          {/* Select GBM */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Lotação
-            </label>
-            <select
-              name="lotacao"
-              value={form.lotacao || ""}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            >
-              <option value="">Selecione</option>
-              {unidadesCBMDF.map((unidade) => (
-                <option key={unidade.id} value={unidade.id}>{unidade.sigla}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Select Curso */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Curso
-            </label>
-            <select
-              name="id_turma"
-              value={form.id_turma || ""}
-              onChange={handleChangeTurma}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            >
-              <option value="">Selecione</option>
-              {turmas.map((t) => (
-                <option key={t.id_turma} value={t.id_turma}>
-                  {t.titulo} - {moment(t.dt_inicio).format("DD/MM/YYYY")}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Botão */}
-          <button
-            type="submit"
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium transition cursor-pointer"
-          >
-            Enviar Inscrição
-          </button>
-
-        </form >
+          </form >
+        </div >
       </div >
-    </div >
+    </Suspense>
   );
 }
 

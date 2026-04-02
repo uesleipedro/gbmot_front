@@ -1,15 +1,17 @@
 // src/app/alunos/page.js
 "use client";
 import { useState, useEffect } from "react";
-import { Edit, Trash2 } from "lucide-react"
+import { Eye } from "lucide-react"
 import Image from "next/image";
 import api from "@/utils/Api";
 import wpp from "../../../../public/wpp.png";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
 
 export default function Alunos() {
   const [alunos, setAlunos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const buscarAlunos = async () => {
     setLoading(true);
@@ -91,9 +93,10 @@ export default function Alunos() {
               <td className="px-6 py-4 text-gray-600">
                 {aluno.matricula}
               </td>
-              <td className="px-6 py-4 text-right space-x-3">
-
-
+              <td className="px-6 py-4  space-x-3">
+                <Eye
+                  onClick={() => router.push(`/sistema/alunos/cursos?id_aluno=${aluno.id_aluno}`)}
+                  className="cursor-pointer" />
               </td>
             </tr>
           ))}

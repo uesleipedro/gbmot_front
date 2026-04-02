@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../../public/gemot.svg';
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   // Detectar scroll para efeito visual
   useEffect(() => {
@@ -67,12 +69,12 @@ export default function Navbar() {
 
             {/* Botão Sair - Apenas Desktop */}
             <div className="hidden md:block">
-              <Link
-                href="/logout"
+              <div
+                onClick={logout}
                 className="
                   inline-flex items-center gap-2 px-4 py-2
                   text-sm font-medium text-white
-                  group
+                  group cursor-pointer transition-colors duration-200
                 "
               >
                 <svg
@@ -84,7 +86,7 @@ export default function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 <span>Sair</span>
-              </Link>
+              </div>
             </div>
 
             {/* Botão Menu Mobile */}
@@ -167,8 +169,7 @@ export default function Navbar() {
 
             {/* Rodapé com botão Sair no mobile */}
             <div className="p-4 border-t border-gray-100">
-              <Link
-                href="/logout"
+              <div
                 className="
                   flex items-center gap-3 px-4 py-3
                   text-lg text-white font-bold
@@ -184,8 +185,8 @@ export default function Navbar() {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span className="text-lg">Sair</span>
-              </Link>
+                <span onClick={logout} className="text-lg">Sair</span>
+              </div>
             </div>
           </div>
         </div>

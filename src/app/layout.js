@@ -1,5 +1,5 @@
 import "./globals.css";
-
+import { AuthProvider } from "@/contexts/AuthContext";
 export const metadata = {
   title: "GBMOT",
   description: "Sistema base",
@@ -8,11 +8,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
 
   return (
-    <html lang="pt-BR">
-      <body className="bg-gray-50">
-        {children}
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="pt-BR">
+        <body className="bg-gray-50">
+          {children}
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
 

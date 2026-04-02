@@ -1,10 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import moment from "moment";
 moment.locale("pt-br");
 
 export default function FichaChamada() {
-  const alunos = JSON.parse(sessionStorage.getItem("alunos"));
+  const [alunos, setAlunos] = useState([]);
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("alunos");
+    setAlunos(JSON.parse(storedData));
+  }, []);
 
   const handlePrint = () => {
     setTimeout(() => window.print(), 100);

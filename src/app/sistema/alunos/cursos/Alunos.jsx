@@ -9,11 +9,12 @@ import Loading from "@/components/Loading";
 import { useSearchParams } from "next/navigation";
 import moment from "moment";
 
-export default function Alunos({ params }) {
+export default function Alunos() {
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-  const id_aluno = searchParams.get("id_aluno");
+  const idAlunoParam = searchParams.get('id_aluno');
+  const id_aluno = idAlunoParam ? Number(idAlunoParam) : null;
 
   const buscarAlunos = async () => {
     setLoading(true);

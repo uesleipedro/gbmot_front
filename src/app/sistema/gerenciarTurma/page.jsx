@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Edit, Trash2, EllipsisVertical } from "lucide-react"
+import { Edit, Trash2, EllipsisVertical } from "lucide-react";
 import Image from "next/image";
 import api from "@/utils/Api";
 import wpp from "../../../../public/wpp.png";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import DropdownMenu from "./DropdownMenu";
 import Swal from "sweetalert2";
@@ -20,7 +20,7 @@ export default function GerenciarTurma() {
   const [postGrad, setPostGrad] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const idTurma = searchParams.get('id_turma');
+  const idTurma = searchParams.get("id_turma");
   const [selecionados, setSelecionados] = useState([]);
   const router = useRouter();
 
@@ -29,16 +29,40 @@ export default function GerenciarTurma() {
   }, []);
 
   const openFichaChamada = () => {
-    sessionStorage.setItem("alunos", JSON.stringify(alunos.filter(aluno => aluno.status === "consolidado")));
+    sessionStorage.setItem(
+      "alunos",
+      JSON.stringify(
+        alunos.filter(
+          (aluno) =>
+            aluno.status == "consolidado" || aluno.status == "Concluido",
+        ),
+      ),
+    );
     router.push("/sistema/fichaChamada");
-  }
+  };
 
   const menu = [
-    { label: "Consolidar Alunos selecionados", onClick: () => updateStatusTurmaAluno() },
-    { label: "Consolidar a Turma", onClick: () => consolidarTruma() },
-    { label: "Concluir Turma", onClick: () => openFichaChamada() },
-    { label: "Ficha de Chamada", onClick: () => openFichaChamada() },
-  ]
+    {
+      label: "Consolidar Alunos selecionados",
+      onClick: () => updateStatusTurmaAluno(),
+      show: alunos[0]?.status_turma === "Aberto" ? true : false,
+    },
+    {
+      label: "Consolidar a Turma",
+      onClick: () => consolidarTruma(),
+      show: alunos[0]?.status_turma === "Aberto" ? true : false,
+    },
+    {
+      label: "Concluir Turma",
+      onClick: () => concluirTruma(),
+      show: alunos[0]?.status_turma === "Consolidada" ? true : false,
+    },
+    {
+      label: "Ficha de Chamada",
+      onClick: () => openFichaChamada(),
+      show: true,
+    },
+  ];
 
   const buscarAlunos = async () => {
     setLoading(true);
@@ -50,16 +74,18 @@ export default function GerenciarTurma() {
     } finally {
       setLoading(false);
     }
-
-  }
+  };
 
   const buscarPostGrad = () => {
-    api.get("/post_grad").then((response) => {
-      setPostGrad(response.data)
-    }).catch((error) => {
-      console.error("Erro ao buscar post/grad!")
-    })
-  }
+    api
+      .get("/post_grad")
+      .then((response) => {
+        setPostGrad(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar post/grad!");
+      });
+  };
 
   useEffect(() => {
     buscarAlunos();
@@ -67,29 +93,69 @@ export default function GerenciarTurma() {
 
   const updateStatusTurmaAluno = () => {
     if (!selecionados.length) {
-      Swal.fire("Nenhum aluno selecionado!", "Selecione os alunos que deseja consolidar.", "warning");
+      Swal.fire(
+        "Nenhum aluno selecionado!",
+        "Selecione os alunos que deseja consolidar.",
+        "warning",
+      );
       return;
     }
 
-    api.put("/turma_aluno", selecionados).then((response) => {
-      buscarAlunos()
-      Swal.fire("Alunos consolidados com sucesso!")
-    }).catch((error) => {
-      console.error("Erro ao consolidar alunos!", error)
-    })
-  }
+    api
+      .put("/turma_aluno", selecionados)
+      .then((response) => {
+        buscarAlunos();
+        Swal.fire("Alunos consolidados com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao consolidar alunos!", error);
+      });
+  };
 
   const consolidarTruma = () => {
-    api.put('/turmas/consolidar_turma', { id_turma: idTurma })
+    api
+      .put("/turmas/consolidar_turma", {
+        id_turma: idTurma,
+        status_turma: alunos[0]?.status_turma,
+      })
       .then((response) => {
         buscarAlunos();
         Swal.fire("Turma consolidada com sucesso!");
-      }).catch((error) => {
-        console.error("Erro ao consolidar turma!", error);
-        Swal.fire("Erro ao consolidar turma!", "Não foi possível consolidar a turma, entre em contato com o suporte", "error");
       })
-  }
+      .catch((error) => {
+        console.error(
+          "Erro ao consolidar turma!",
+          error.response?.data?.message,
+        );
+        Swal.fire(
+          "Erro ao consolidar turma!",
+          error.response?.data?.message ||
+            "Não foi possível consolidar a turma, entre em contato com o suporte",
+          "error",
+        );
+      });
+  };
 
+  const concluirTruma = () => {
+    api
+      .put("/turmas/concluir_turma", {
+        id_turma: idTurma,
+        status_turma: alunos[0]?.status_turma,
+      })
+      .then((response) => {
+        buscarAlunos();
+        Swal.fire("Turma Concluída com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao concluir turma!", error.response?.data?.message);
+        Swal.fire(
+          "Erro ao consolidar turma!",
+          error.response?.data?.message ||
+            "Não foi possível concluir a turma, entre em contato com o suporte",
+          "error",
+        );
+      });
+  };
   const filteredAlunos = useMemo(() => {
     return alunos.filter((item) => {
       const matchNome = item.nome
@@ -112,32 +178,47 @@ export default function GerenciarTurma() {
     });
   }, [alunos, filtroTexto, filtroPostGrad, filtroLotacao, filtroStatus]);
 
-  if (loading) return <Loading />
+  const statusUnicos = [...new Set(alunos.map((item) => item.status))];
+
+  if (loading) return <Loading />;
 
   return (
     <div>
       <div className="flex flex-col py-2">
         <h1 className="text-2xl text-red-500 font-bold">Gerenciar Turma</h1>
-        <h1 className="text-2xl text-red-500 font-bold">{alunos[0]?.id_turma == 1 ? 'RESERVA' : alunos[0]?.curso}</h1>
+        <h1 className="text-2xl text-red-500 font-bold">
+          {alunos[0]?.id_turma == 1 ? "RESERVA" : alunos[0]?.curso}
+        </h1>
       </div>
 
-      <p><span className="font-bold">Status:</span> {alunos[0]?.status_turma}</p>
+      <p>
+        <span className="font-bold">Status:</span> {alunos[0]?.status_turma}
+      </p>
 
       <p className="py-4 font-bold">Selecionados: {selecionados.length}</p>
 
-      <div className="flex gap-5">
-
+      <div className="flex flex-wrap gap-5">
         <div
-          className={`${filtroStatus === '' ? 'bg-red-700 text-white' : 'bg-white text-gray-600'} border font-bold px-3 py-2 rounded-lg cursor-pointer`}
-          onClick={() => { setFiltroStatus(""); setSelecionados([]) }}>
-          Todos</div>
-        <div
-          className={`${filtroStatus === 'pre-inscrito' ? 'bg-red-700 text-white' : 'bg-white text-gray-600'} border font-bold px-3 py-2 rounded-lg cursor-pointer`}
-          onClick={() => { setFiltroStatus("pre-inscrito"); setSelecionados([]) }}>
-          Pré-Inscritos</div>
-        <div
-          className={`${filtroStatus === 'consolidado' ? 'bg-red-700 text-white' : 'bg-white text-gray-600'} border font-bold px-3 py-2 rounded-lg cursor-pointer`}
-          onClick={() => { setFiltroStatus("consolidado"); setSelecionados([]) }}>Consolidados</div>
+          className={`${filtroStatus === "" ? "bg-red-700 text-white" : "bg-white text-gray-600"} border font-bold px-3 py-2 rounded-lg cursor-pointer`}
+          onClick={() => {
+            setFiltroStatus("");
+            setSelecionados([]);
+          }}
+        >
+          TODOS
+        </div>
+        {statusUnicos.map((status, index) => (
+          <div
+            key={index}
+            className={`${filtroStatus === status ? "bg-red-700 text-white" : "bg-white text-gray-600"} border font-bold px-3 py-2 rounded-lg cursor-pointer`}
+            onClick={() => {
+              setFiltroStatus(status);
+              setSelecionados([]);
+            }}
+          >
+            {status?.toUpperCase()}
+          </div>
+        ))}
 
         <DropdownMenu items={menu} />
       </div>
@@ -148,7 +229,8 @@ export default function GerenciarTurma() {
             type="text"
             onChange={(e) => setFiltroTexto(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            placeholder="Buscar por nome" />
+            placeholder="Buscar por nome"
+          />
 
           <select
             className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
@@ -156,7 +238,9 @@ export default function GerenciarTurma() {
           >
             <option value="">--- Selecionar Posto/Graduação ---</option>
             {postGrad.map((pg) => (
-              <option key={pg.id_post_grad} value={pg.abreviacao}>{pg.abreviacao}</option>
+              <option key={pg.id_post_grad} value={pg.abreviacao}>
+                {pg.abreviacao}
+              </option>
             ))}
           </select>
 
@@ -166,14 +250,15 @@ export default function GerenciarTurma() {
           >
             <option value="">--- Lotação ---</option>
             {alunos.map((al) => (
-              <option key={al.matricula} value={al.lotacao}>{al.lotacao}</option>
+              <option key={al.matricula} value={al.lotacao}>
+                {al.lotacao}
+              </option>
             ))}
           </select>
         </div>
       </div>
 
       <table className="hidden md:table w-full text-left border-collapse">
-
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
             <th className="px-4 text-sm font-semibold text-gray-600">
@@ -185,7 +270,7 @@ export default function GerenciarTurma() {
                       filteredAlunos.map((a) => ({
                         id_aluno: a.id_aluno,
                         id_turma: a.id_turma,
-                      }))
+                      })),
                     );
                   } else {
                     setSelecionados([]);
@@ -231,7 +316,7 @@ export default function GerenciarTurma() {
                   checked={selecionados.some(
                     (s) =>
                       s.id_aluno === aluno.id_aluno &&
-                      s.id_turma === aluno.id_turma
+                      s.id_turma === aluno.id_turma,
                   )}
                   onChange={(e) => {
                     if (e.target.checked) {
@@ -249,8 +334,8 @@ export default function GerenciarTurma() {
                             !(
                               s.id_aluno === aluno.id_aluno &&
                               s.id_turma === aluno.id_turma
-                            )
-                        )
+                            ),
+                        ),
                       );
                     }
                   }}
@@ -268,7 +353,11 @@ export default function GerenciarTurma() {
               </td>
               <td className="flex flex-row justify-center items-center gap-2  py-4 text-gray-600">
                 {aluno.whatsapp ? aluno.whatsapp : "N/A"}
-                <a href={`http://wa.me/${aluno?.whatsapp}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`http://wa.me/${aluno?.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Image
                     alt="WhatsApp"
                     src={wpp}
@@ -278,23 +367,20 @@ export default function GerenciarTurma() {
                   />
                 </a>
               </td>
-              <td className="px-6 py-4 text-gray-600">
-                {aluno.matricula}
-              </td>
+              <td className="px-6 py-4 text-gray-600">{aluno.matricula}</td>
               <td className="px-6 py-4 text-right space-x-3">
-
                 <button className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
                   <Trash2 />
                 </button>
-
               </td>
             </tr>
           ))}
         </tbody>
-
       </table>
 
-      <div className={`${filteredAlunos.length <= 0 && 'hidden'} flex md:hidden w-full justify-center items-center py-5`}>
+      <div
+        className={`${filteredAlunos.length <= 0 && "hidden"} flex md:hidden w-full justify-center items-center py-5`}
+      >
         <input
           type="checkbox"
           onChange={(e) => {
@@ -303,7 +389,7 @@ export default function GerenciarTurma() {
                 filteredAlunos.map((a) => ({
                   id_aluno: a.id_aluno,
                   id_turma: a.id_turma,
-                }))
+                })),
               );
             } else {
               setSelecionados([]);
@@ -317,14 +403,17 @@ export default function GerenciarTurma() {
         />
       </div>
       {filteredAlunos.map((aluno) => (
-        <div key={aluno.id_aluno} className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4">
+        <div
+          key={aluno.id_aluno}
+          className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4"
+        >
           <div className="text-gray-500">
             <input
               type="checkbox"
               checked={selecionados.some(
                 (s) =>
                   s.id_aluno === aluno.id_aluno &&
-                  s.id_turma === aluno.id_turma
+                  s.id_turma === aluno.id_turma,
               )}
               onChange={(e) => {
                 if (e.target.checked) {
@@ -342,8 +431,8 @@ export default function GerenciarTurma() {
                         !(
                           s.id_aluno === aluno.id_aluno &&
                           s.id_turma === aluno.id_turma
-                        )
-                    )
+                        ),
+                    ),
                   );
                 }
               }}
@@ -357,17 +446,12 @@ export default function GerenciarTurma() {
             <p>Matrícula: {aluno.matricula}</p>
           </div>
           <div className="flex flex-col justify-center items-center gap-5">
-
             <button className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
               <Trash2 />
             </button>
-
           </div>
         </div>
-
-      ))
-      }
-    </div >
+      ))}
+    </div>
   );
 }
-

@@ -1,14 +1,13 @@
-"use client"
+"use client";
 
-import { useEffect } from "react";
 import moment from "moment";
-moment.locale('pt-br');
+moment.locale("pt-br");
 
 export default function FichaChamada() {
   const alunos = JSON.parse(sessionStorage.getItem("alunos"));
 
   const handlePrint = () => {
-    setTimeout(() => window.print(), 100)
+    setTimeout(() => window.print(), 100);
   };
 
   return (
@@ -33,7 +32,10 @@ export default function FichaChamada() {
 
         {/* Título */}
         <div className="text-center mt-6 font-bold">
-          RELAÇÃO DE CHAMADA - CAPACITAÇÃO – DE {moment(alunos[0]?.dt_inicio).format("DD [DE] MMMM").toUpperCase()} A {moment(alunos[0]?.dt_fim).format("DD [DE] MMMM").toUpperCase()} DE {moment(alunos[0]?.dt_inicio).format("YYYY")}
+          RELAÇÃO DE CHAMADA - CAPACITAÇÃO – DE{" "}
+          {moment(alunos[0]?.dt_inicio).format("DD [DE] MMMM").toUpperCase()} A{" "}
+          {moment(alunos[0]?.dt_fim).format("DD [DE] MMMM").toUpperCase()} DE{" "}
+          {moment(alunos[0]?.dt_inicio).format("YYYY")}
         </div>
 
         <div className="mt-2 font-semibold">{alunos[0]?.curso}</div>
@@ -49,9 +51,15 @@ export default function FichaChamada() {
               <th className="border p-1">MATR.</th>
               <th className="border p-1">LOTAÇÃO</th>
 
-              <th className="border p-1" colSpan={2}>1º DIA</th>
-              <th className="border p-1" colSpan={2}>2º DIA</th>
-              <th className="border p-1" colSpan={2}>3º DIA</th>
+              <th className="border p-1" colSpan={2}>
+                1º DIA
+              </th>
+              <th className="border p-1" colSpan={2}>
+                2º DIA
+              </th>
+              <th className="border p-1" colSpan={2}>
+                3º DIA
+              </th>
 
               <th className="border p-1">RESULTADO</th>
             </tr>
@@ -81,11 +89,19 @@ export default function FichaChamada() {
             {alunos.map((aluno, index) => (
               <tr key={aluno.id}>
                 <td className="border p-1 text-center">{index + 1}</td>
-                <td className="border p-1 text-center">{aluno?.post_grad?.toUpperCase()}</td>
-                <td className="border p-1 text-center">{aluno?.nome?.toUpperCase()}</td>
-                <td className="border p-1 text-center">{aluno?.nome_guerra?.toUpperCase()}</td>
+                <td className="border p-1 text-center">
+                  {aluno?.post_grad?.toUpperCase()}
+                </td>
+                <td className="border p-1 text-center">
+                  {aluno?.nome?.toUpperCase()}
+                </td>
+                <td className="border p-1 text-center">
+                  {aluno?.nome_guerra?.toUpperCase()}
+                </td>
                 <td className="border p-1 text-center">{aluno.matricula}</td>
-                <td className="border p-1 text-center">{aluno?.lotacao?.toUpperCase()}</td>
+                <td className="border p-1 text-center">
+                  {aluno?.lotacao?.toUpperCase()}
+                </td>
 
                 {/* Dias */}
                 {[...Array(6)].map((_, i) => (
@@ -117,7 +133,6 @@ export default function FichaChamada() {
             ))}
           </tbody>
         </table>
-
       </div>
     </div>
   );

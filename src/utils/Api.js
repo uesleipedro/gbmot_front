@@ -3,8 +3,8 @@ import "dotenv/config";
 
 const api = axios.create({
   // baseURL: 'https://134.122.24.222:3333/', //este para producao
-  //baseURL: "https://apiGbmot.planaltolivre.com.br/", //este para producao
-  baseURL: "http://localhost:3333/",
+  baseURL: "https://api.planaltolivre.com.br/", //este para producao
+  //baseURL: "http://localhost:3333/",
   //baseURL: `192.168.1.37:3333`,
   //baseURL: `${ process.env.BASEURL }`,
   headers: {

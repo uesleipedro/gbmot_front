@@ -10,7 +10,8 @@ import { useSearchParams } from 'next/navigation';
 export default function InscricaoPage() {
   const router = useRouter()
   const searchParams = useSearchParams();
-  const idTurma = searchParams.get('id_turma');
+  const idTurmaParam = searchParams.get('id_turma');
+  const idTurma = idTurmaParam ? Number(idTurmaParam) : null;
   const post_grad = [
     { numero: 1, descricao: "Soldado", abreviacao: "Sd" },
     { numero: 2, descricao: "Cabo", abreviacao: "Cb" },
@@ -70,13 +71,17 @@ export default function InscricaoPage() {
   const [form, setForm] = useState({});
 
   useEffect(() => {
-    if (!idTurma || !turmas.length) return;
+    if (!idTurma) return;
+    if (!turmas.length) return;
 
     const turmaSelecionada = turmas.find(
-      (t) => String(t.id_turma) === String(idTurma)
+      (t) => Number(t.id_turma) === idTurma
     );
 
-    if (!turmaSelecionada) return;
+    if (!turmaSelecionada) {
+      console.warn("Turma não encontrada", idTurma);
+      return;
+    }
 
     setForm((prev) => ({
       ...prev,
@@ -247,7 +252,7 @@ export default function InscricaoPage() {
             </label>
             <select
               name="qbmg"
-              value={Number(form.qbmg) || ""}
+              value={form.qbmg ?? ""}
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"

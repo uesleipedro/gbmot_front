@@ -149,65 +149,68 @@ export default function Cursos() {
         </thead>
 
         <tbody>
-          {cursos.map((c) => (
-            <tr
-              key={c.id_curso}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="px-6 py-4 font-medium text-gray-900">
-                {c.titulo.toUpperCase()}
-              </td>
-              <td className="px-6 py-4 font-medium text-gray-900">
-                {c.descricao.length > 20 ? c.descricao.slice(0, 20).toUpperCase() + "..." : c.descricao.toUpperCase()}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {c.carga_horaria}HS
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {post_grad[c.post_grad_minimo]}
-              </td>
-              <td className="px-6 py-4 text-right space-x-3">
+          {cursos.length === 0 ? (<div className="flex w-full pt-10 items-center justify-center text-gray-900 "><h1>Nenhum Curso Encontrado</h1></div>) :
 
-                <button onClick={() => editarCurso(c)} className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer">
-                  <Edit />
-                </button>
+            cursos.map((c) => (
+              <tr
+                key={c.id_curso}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {c.titulo.toUpperCase() || ""}
+                </td>
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {c?.descricao?.length > 20 ? c?.descricao?.slice(0, 20)?.toUpperCase() + "..." : c?.descricao?.toUpperCase()}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {c.carga_horaria || ""}HS
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {post_grad[c.post_grad_minimo] || ""}
+                </td>
+                <td className="px-6 py-4 text-right space-x-3">
 
-                <button
-                  onClick={() => deleteCurso(c.id_curso)}
-                  className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
-                  <Trash2 />
-                </button>
+                  <button onClick={() => editarCurso(c)} className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer">
+                    <Edit />
+                  </button>
 
-              </td>
-            </tr>
-          ))}
+                  <button
+                    onClick={() => deleteCurso(c.id_curso)}
+                    className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
+                    <Trash2 />
+                  </button>
+
+                </td>
+              </tr>
+            ))}
         </tbody>
 
       </table>
 
-      {cursos.map((c) => (
-        <div key={c.id_curso} className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4">
-          <div className="text-gray-500">
-            <h2 className="text-xl font-bold">{c.titulo.toUpperCase()}</h2>
-            <p><span className="font-bold">DESCRIÇÃO:</span> {c.descricao.length > 20 ? c.descricao.slice(0, 20).toUpperCase() + "..." : c.descricao.toUpperCase()} </p>
-            <p><span className="font-bold">CARGA HORÁRIA:</span> {c.carga_horaria}HS</p>
-            <p><span className="font-bold">POST/GRAD MÍNIMO:</span> {c.post_grad_minimo}</p>
+      {cursos.length === 0 ? (<div className="md:hidden flex w-full pt-10 items-center justify-center text-gray-900 "><h1>Nenhum Curso Encontrado</h1></div>) :
+        cursos.map((c) => (
+          <div key={c.id_curso} className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4">
+            <div className="text-gray-500">
+              <h2 className="text-xl font-bold">{c.titulo.toUpperCase() || ""}</h2>
+              <p><span className="font-bold">DESCRIÇÃO:</span> {c?.descricao?.length > 20 ? c?.descricao?.slice(0, 20)?.toUpperCase() + "..." : c?.descricao?.toUpperCase()} </p>
+              <p><span className="font-bold">CARGA HORÁRIA:</span> {c.carga_horaria || ""}HS</p>
+              <p><span className="font-bold">POST/GRAD MÍNIMO:</span> {c.post_grad_minimo || ""}</p>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-5">
+              <button onClick={() => editarCurso(c)} className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer">
+                <Edit />
+              </button>
+
+              <button
+                onClick={() => deleteCurso(c.id_curso)}
+                className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
+                <Trash2 />
+              </button>
+
+            </div>
           </div>
-          <div className="flex flex-col justify-center items-center gap-5">
-            <button onClick={() => editarCurso(c)} className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer">
-              <Edit />
-            </button>
 
-            <button
-              onClick={() => deleteCurso(c.id_curso)}
-              className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer">
-              <Trash2 />
-            </button>
-
-          </div>
-        </div>
-
-      ))}
+        ))}
 
       {moddal && (
         <div onClick={() => setModdal(!moddal)} className="absolute inset-0 flex bg-black/70 items-center justify-center">

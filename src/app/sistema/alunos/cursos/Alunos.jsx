@@ -39,7 +39,7 @@ export default function Alunos() {
   return (
     <div>
       <h1 className="text-2xl text-red-500 font-bold mb-4">CURSOS CONCLUÍDOS</h1>
-      <h1 className="text-xl text-gray-500 font-bold mb-4">{cursos[0].post_grad.toUpperCase()} - {cursos[0].nome}</h1>
+      <h1 className="text-xl text-gray-500 font-bold mb-4">{cursos[0]?.post_grad?.toUpperCase()} - {cursos[0]?.nome}</h1>
 
       <table className="hidden md:table w-full text-left border-collapse">
 
@@ -64,49 +64,51 @@ export default function Alunos() {
         </thead>
 
         <tbody>
-          {cursos.map((c, index) => (
-            <tr
-              key={index}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="px-6 py-4 font-medium text-gray-900">
-                {c.curso}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {moment(c.dt_inscricao).format("DD/MM/YYYY")}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {moment(c.dt_conclusao).format("DD/MM/YYYY")}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {moment(c.dt_inicio).format("DD/MM/YYYY")} - {moment(c.dt_fim).format("DD/MM/YYYY")}
-              </td>
-              <td className="px-6 py-4 text-right space-x-3">
+          {cursos.length === 0 ? (<div className="flex items-center justify-center pt-10">Esse militar não possui cursos concluídos</div>) :
+            cursos.map((c, index) => (
+              <tr
+                key={index}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {c.curso}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {moment(c.dt_inscricao).format("DD/MM/YYYY")}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {moment(c.dt_conclusao).format("DD/MM/YYYY")}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {moment(c.dt_inicio).format("DD/MM/YYYY")} - {moment(c.dt_fim).format("DD/MM/YYYY")}
+                </td>
+                <td className="px-6 py-4 text-right space-x-3">
 
 
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            ))}
         </tbody>
 
       </table>
 
-      {cursos.map((c, index) => (
-        <div key={index} className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4">
-          <div className="text-gray-500 w-full">
-            <div className="flex flex-row w-full justify-between">
-              <h2 className="text-xl font-bold">{c.curso}</h2>
+      {cursos.length === 0 ? (<div className="md:hidden flex items-center justify-center pt-10">Esse militar não possui cursos concluídos</div>) :
+        cursos.map((c, index) => (
+          <div key={index} className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4">
+            <div className="text-gray-500 w-full">
+              <div className="flex flex-row w-full justify-between">
+                <h2 className="text-xl font-bold">{c.curso}</h2>
 
+              </div>
+              <p>Data Inscrição: {moment(c.dt_inscricao).format("DD/MM/YYYY")}</p>
+              <p>Data Conclusão: {moment(c.dt_conclusão).format("DD/MM/YYYY")}</p>
+              <p>Período: {moment(c.dt_inicio).format("DD/MM/YYYY")} - {moment(c.dt_fim).format("DD/MM/YYYY")}</p>
             </div>
-            <p>Data Inscrição: {moment(c.dt_inscricao).format("DD/MM/YYYY")}</p>
-            <p>Data Conclusão: {moment(c.dt_conclusão).format("DD/MM/YYYY")}</p>
-            <p>Período: {moment(c.dt_inicio).format("DD/MM/YYYY")} - {moment(c.dt_fim).format("DD/MM/YYYY")}</p>
+            <div className="flex flex-col justify-center items-center gap-5">
+            </div>
           </div>
-          <div className="flex flex-col justify-center items-center gap-5">
-          </div>
-        </div>
 
-      ))}
+        ))}
     </div>
   );
 }

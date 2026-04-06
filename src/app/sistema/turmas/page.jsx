@@ -226,119 +226,121 @@ export default function Cursos() {
         </thead>
 
         <tbody>
-          {turmasFiltradas.map((t) => (
-            <tr
-              key={t.id_turma}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="px-6 py-4 font-medium text-gray-900">
-                {t.titulo.toUpperCase()}
-              </td>
-              <td
-                className={`px-6 py-4  ${statusColor[t.status.toLowerCase()]} `}
+          {turmasFiltradas.length === 0 ? (<div className="flex w-full justify-center pt-10 items-center"><h1>Nenhuma Turma Encontrada</h1></div>) :
+            turmasFiltradas.map((t) => (
+              <tr
+                key={t.id_turma}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
-                {t.status.toUpperCase()}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {moment(t.dt_inicio).format("DD/MM/YYYY")}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {moment(t.dt_fim).format("DD/MM/YYYY")}
-              </td>
-              <td className="px-6 py-4 text-gray-600">
-                {t.local.toUpperCase()}
-              </td>
-              <td className="px-6 py-4 text-gray-600">{t.horario}</td>
-              <td className="px-6 py-4 text-right space-x-3">
-                <button
-                  title="Gerir Turma"
-                  onClick={() =>
-                    router.push(
-                      `/sistema/gerenciarTurma?id_turma=${t.id_turma}`,
-                    )
-                  }
-                  className="text-sm text-orange-500 hover:text-orange-400 font-medium cursor-pointer"
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {t.titulo.toUpperCase()}
+                </td>
+                <td
+                  className={`px-6 py-4  ${statusColor[t.status.toLowerCase()]} `}
                 >
-                  <Settings />
-                </button>
+                  {t.status.toUpperCase()}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {moment(t.dt_inicio).format("DD/MM/YYYY")}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {moment(t.dt_fim).format("DD/MM/YYYY")}
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {t.local.toUpperCase()}
+                </td>
+                <td className="px-6 py-4 text-gray-600">{t.horario}</td>
+                <td className="px-6 py-4 text-right space-x-3">
+                  <button
+                    title="Gerir Turma"
+                    onClick={() =>
+                      router.push(
+                        `/sistema/gerenciarTurma?id_turma=${t.id_turma}`,
+                      )
+                    }
+                    className="text-sm text-orange-500 hover:text-orange-400 font-medium cursor-pointer"
+                  >
+                    <Settings />
+                  </button>
 
-                <button
-                  onClick={() => {
-                    setDados(t);
-                    setModdal(true);
-                  }}
-                  className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer"
-                >
-                  <Edit />
-                </button>
+                  <button
+                    onClick={() => {
+                      setDados(t);
+                      setModdal(true);
+                    }}
+                    className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer"
+                  >
+                    <Edit />
+                  </button>
 
-                <button
-                  onClick={() => deleteTurma(t.id_turma)}
-                  className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer"
-                >
-                  <Trash2 />
-                </button>
-              </td>
-            </tr>
-          ))}
+                  <button
+                    onClick={() => deleteTurma(t.id_turma)}
+                    className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer"
+                  >
+                    <Trash2 />
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
-      {turmasFiltradas.map((t) => (
-        <div
-          key={t.id_turma}
-          className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4"
-        >
-          <div className="text-gray-500">
-            <h2 className="text-xl font-bold">{t.titulo}</h2>
-            <p>
-              <span className="font-bold">Status:</span> {t.status}
-            </p>
-            <p>
-              <span className="font-bold">Data Início:</span>{" "}
-              {moment(t.dt_inicio).format("DD/MM/YYYY")}
-            </p>
-            <p>
-              <span className="font-bold">Data Fim:</span>{" "}
-              {moment(t.dt_fim).format("DD/MM/YYYY")}
-            </p>
-            <p>
-              <span className="font-bold">Local:</span> {t.local}
-            </p>
-            <p>
-              <span className="font-bold">Horário:</span> {t.horario}
-            </p>
-          </div>
-          <div className="flex flex-col justify-center items-center gap-5">
-            <button
-              onClick={() =>
-                router.push(`/sistema/gerenciarTurma?id_turma=${t.id_turma}`)
-              }
-              title="Gerir Turma"
-              className="text-sm text-orange-500 hover:text-orange-400 font-medium cursor-pointer"
-            >
-              <Settings />
-            </button>
+      {turmasFiltradas.length === 0 ? (<div className="md:hidden pt-10 flex w-full justify-center items-center"><h1>Nenhuma Turma Encontrada</h1></div>) :
+        turmasFiltradas.map((t) => (
+          <div
+            key={t.id_turma}
+            className="md:hidden flex flex-row justify-between border p-4 rounded-lg mb-4"
+          >
+            <div className="text-gray-500">
+              <h2 className="text-xl font-bold">{t.titulo}</h2>
+              <p>
+                <span className="font-bold">Status:</span> {t.status}
+              </p>
+              <p>
+                <span className="font-bold">Data Início:</span>{" "}
+                {moment(t.dt_inicio).format("DD/MM/YYYY")}
+              </p>
+              <p>
+                <span className="font-bold">Data Fim:</span>{" "}
+                {moment(t.dt_fim).format("DD/MM/YYYY")}
+              </p>
+              <p>
+                <span className="font-bold">Local:</span> {t.local}
+              </p>
+              <p>
+                <span className="font-bold">Horário:</span> {t.horario}
+              </p>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-5">
+              <button
+                onClick={() =>
+                  router.push(`/sistema/gerenciarTurma?id_turma=${t.id_turma}`)
+                }
+                title="Gerir Turma"
+                className="text-sm text-orange-500 hover:text-orange-400 font-medium cursor-pointer"
+              >
+                <Settings />
+              </button>
 
-            <button
-              onClick={() => {
-                setDados(t);
-                setModdal(true);
-              }}
-              className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer"
-            >
-              <Edit />
-            </button>
+              <button
+                onClick={() => {
+                  setDados(t);
+                  setModdal(true);
+                }}
+                className="text-sm text-blue-500 hover:text-blue-400 font-medium cursor-pointer"
+              >
+                <Edit />
+              </button>
 
-            <button
-              onClick={() => deleteTurma(t.id_turma)}
-              className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer"
-            >
-              <Trash2 />
-            </button>
+              <button
+                onClick={() => deleteTurma(t.id_turma)}
+                className="text-sm text-red-500 hover:text-red-400 font-medium cursor-pointer"
+              >
+                <Trash2 />
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
       {moddal && (
         <div
